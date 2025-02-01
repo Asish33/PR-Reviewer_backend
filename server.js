@@ -69,7 +69,7 @@ app.post("/webhook", (req, res) => {
   const event = req.get("X-GitHub-Event");
 
   if (event == "pull_request") {
-    res.json({ body: req.body });
+    console.log({ body: req.body });
   }
 });
 
