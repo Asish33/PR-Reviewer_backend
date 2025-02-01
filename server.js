@@ -4,18 +4,19 @@ const passport = require("passport");
 const GitHubStrategy = require("passport-github2").Strategy;
 const dotenv = require("dotenv");
 
-
 dotenv.config();
 
 const app = express();
 const port = 3000;
 
+app.use(express.json());
+
 app.use(
   session({
-    secret: process.env.SESSION_SECRET, 
+    secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false,
-    cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }, 
+    cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 },
   })
 );
 
@@ -35,19 +36,15 @@ passport.use(
   )
 );
 
-
 passport.serializeUser((user, done) => {
   done(null, user);
 });
-
 
 passport.deserializeUser((obj, done) => {
   done(null, obj);
 });
 
-
 app.get("/auth/github", passport.authenticate("github", { scope: ["user"] }));
-
 
 app.get(
   "/auth/github/callback",
@@ -64,11 +61,17 @@ app.get("/dashboard", (req, res) => {
   res.send(`Hello ${req.user.profile.username}! <a href="/logout">Logout</a>`);
 });
 
-
 app.get("/logout", (req, res) => {
-    res.redirect("/");
-  });
+  res.redirect("/");
+});
 
+app.post("/webhook", (req, res) => {
+  const event = req.get("X-GitHub-Event");
+
+  if (event == "pull_request") {
+    res.json({ body: req.body });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
