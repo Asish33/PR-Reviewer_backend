@@ -66,12 +66,15 @@ app.get("/logout", (req, res) => {
 });
 
 app.post("/webhook", (req, res) => {
-  const event = req.get("X-GitHub-Event");
-
-  if (event == "pull_request") {
-    console.log({ body: req.body });
+  const { action, pull_request } = req.body;
+  if (action === "opened") {
+    console.log(
+      `PR Opened: ${pull_request.number} - ${pull_request.title} ${pull_request.user.login}`
+    );
   }
+  res.status(200).send("Received");
 });
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
