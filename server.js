@@ -3,7 +3,7 @@ const session = require("express-session");
 const passport = require("passport");
 const GitHubStrategy = require("passport-github2").Strategy;
 const dotenv = require("dotenv");
-
+import giveContent from "./gemini";
 dotenv.config();
 
 const app = express();
@@ -65,14 +65,15 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-app.post("/webhook", (req, res) => {
-  const { action, pull_request } = req.body;
-  if (action === "opened") {
-    console.log(
-      `PR Opened: ${pull_request.number} - ${pull_request.title} ${pull_request.user.login}`
-    );
+app.post("/webhook", async (req, res) => {
+  const type = req.get("X-Github-Event")
+  if(type === "pull_request"){
+    const body = req.body;
+    const input = JSON.stringify(body);
+    const response = await giveContent(input)
+    res.send(response);
   }
-  res.status(200).send("Received");
+  
 });
 
 
