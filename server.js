@@ -3,7 +3,8 @@ const session = require("express-session");
 const passport = require("passport");
 const GitHubStrategy = require("passport-github2").Strategy;
 const dotenv = require("dotenv");
-import giveContent from "./gemini";
+const giveContent = require("./gemini.js");
+
 dotenv.config();
 
 const app = express();

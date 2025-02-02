@@ -11,7 +11,7 @@ async function giveContent(text) {
     "you are an AI assistant , Give summary of this json file.";
   const prompt = text;
   const result = await model.generateContent(systemPrompt + prompt);
-  console.log(result.response.text());
+  return result.response.text();
 }
 
-export default giveContent;
+module.exports = giveContent;
