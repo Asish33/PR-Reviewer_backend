@@ -72,6 +72,7 @@ app.post("/webhook", async (req, res) => {
     const body = req.body;
     const input = JSON.stringify(body);
     const response = await giveContent(input)
+    console.log(response);
     res.send(response);
   }
   
