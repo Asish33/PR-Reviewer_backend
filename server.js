@@ -8,7 +8,6 @@ const giveContent = require("./gemini.js");
 dotenv.config();
 
 const app = express();
-const port = 3000;
 
 app.use(express.json());
 
@@ -29,7 +28,8 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "https://pr-reviewer-backend.onrender.com/auth/github/callback",
+      callbackURL:
+        "https://pr-reviewer-backend.onrender.com/auth/github/callback", 
     },
     async (accessToken, refreshToken, profile, done) => {
       return done(null, { profile, accessToken });
@@ -45,7 +45,15 @@ passport.deserializeUser((obj, done) => {
   done(null, obj);
 });
 
-app.get("/auth/github", passport.authenticate("github", { scope: ["user"] }));
+app.get("/auth/github", (req, res) => {
+  const authURL = `https://github.com/login/oauth/authorize?client_id=${
+    process.env.GITHUB_CLIENT_ID
+  }&redirect_uri=${encodeURIComponent(
+    "https://pr-reviewer-backend.onrender.com/auth/github/callback"
+  )}&scope=user&prompt=consent`; 
+
+  res.redirect(authURL);
+});
 
 app.get(
   "/auth/github/callback",
@@ -68,28 +76,23 @@ app.get("/logout", (req, res, next) => {
 
     req.session.destroy((err) => {
       if (err) return next(err);
-
       res.clearCookie("connect.sid", { path: "/" });
       res.redirect("/");
     });
   });
 });
 
-
-
 app.post("/webhook", async (req, res) => {
-  const type = req.get("X-Github-Event")
-  if(type === "pull_request"){
+  const type = req.get("X-Github-Event");
+  if (type === "pull_request") {
     const body = req.body;
     const input = JSON.stringify(body);
-    const response = await giveContent(input)
+    const response = await giveContent(input);
     console.log(response);
     res.send(response);
   }
-  
 });
 
-
 app.listen(port, () => {
-  console.log(`Server running`);
+  console.log("running");
 });
