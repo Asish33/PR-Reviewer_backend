@@ -62,9 +62,15 @@ app.get("/dashboard", (req, res) => {
   res.send(`Hello ${req.user.profile.username}! <a href="/logout">Logout</a>`);
 });
 
-app.get("/logout", (req, res) => {
-  res.redirect("/");
+app.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) return next(err);
+    req.session.destroy(() => {
+      res.redirect("/");
+    });
+  });
 });
+
 
 app.post("/webhook", async (req, res) => {
   const type = req.get("X-Github-Event")
