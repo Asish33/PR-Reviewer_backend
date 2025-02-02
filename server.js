@@ -29,7 +29,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/auth/github/callback",
+      callbackURL: "https://pr-reviewer-backend.onrender.com/auth/github",
     },
     async (accessToken, refreshToken, profile, done) => {
       return done(null, { profile, accessToken });
@@ -80,5 +80,5 @@ app.post("/webhook", async (req, res) => {
 
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running`);
 });
