@@ -49,7 +49,7 @@ app.get("/auth/github", (req, res) => {
   const authURL = `https://github.com/login/oauth/authorize?client_id=${
     process.env.GITHUB_CLIENT_ID
   }&redirect_uri=${encodeURIComponent(
-    "https://pr-reviewer-backend.onrender.com/auth/github/callback"
+    "https://pr-reviewer-frontend.vercel.app/dashboard"
   )}&scope=user&prompt=consent`; 
 
   res.redirect(authURL);
