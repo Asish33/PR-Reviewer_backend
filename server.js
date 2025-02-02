@@ -29,7 +29,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "https://pr-reviewer-backend.onrender.com/auth/github",
+      callbackURL: "https://pr-reviewer-backend.onrender.com/auth/github/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       return done(null, { profile, accessToken });
