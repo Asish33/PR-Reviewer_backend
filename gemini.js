@@ -8,7 +8,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 async function giveContent(text) {
   const systemPrompt =
-    "you are an AI assistant , Give summary of this json file.";
+    "you are an AI assistant , Summarize the following JSON content. Only provide exact summary of the key points and avoid adding any extra information.";
   const prompt = text;
   const result = await model.generateContent(systemPrompt + prompt);
   return result.response.text();
