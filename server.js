@@ -65,11 +65,16 @@ app.get("/dashboard", (req, res) => {
 app.get("/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
-    req.session.destroy(() => {
+
+    req.session.destroy((err) => {
+      if (err) return next(err);
+
+      res.clearCookie("connect.sid", { path: "/" });
       res.redirect("/");
     });
   });
 });
+
 
 
 app.post("/webhook", async (req, res) => {
