@@ -70,8 +70,8 @@ app.get("/dashboard", (req, res) => {
   res.send(`Hello ${req.user.profile.username}! <a href="/logout">Logout</a>`);
 });
 
-app.get("/logout", (req, res, next) => {
-  req.logout((err) => {
+app.get("/logout", async(req, res, next) => {
+  await req.logout((err) => {
     if (err) return next(err);
 
     req.session.destroy((err) => {
@@ -93,6 +93,6 @@ app.post("/webhook", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+app.listen(3000, () => {
   console.log("running");
 });
